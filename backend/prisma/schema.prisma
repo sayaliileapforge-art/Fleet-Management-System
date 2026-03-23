@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vehicle {
+  id            String   @id @default(cuid())
+  vehicleNo     String   @unique
+  name          String
+  type          String
+  model         String
+  capacity      String
+  fuelType      String
+  status        String   @default("Active")
+  licenseExpiry DateTime?
+  insuranceExpiry DateTime?
+  totalTrips    Int      @default(0)
+  totalRevenue  Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  trips         Trip[]
+  expenses      Expense[]
+
+  @@index([status])
+  @@index([vehicleNo])
+}
+
+model Driver {
+  id            String   @id @default(cuid())
+  name          String
+  phone         String   @unique
+  license       String   @unique
+  licenseExpiry DateTime?
+  experience    String
+  status        String   @default("Active")
+  totalTrips    Int      @default(0)
+  rating        Float    @default(4.5)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  trips         Trip[]
+
+  @@index([status])
+  @@index([name])
+}
+
+model Customer {
+  id            String   @id @default(cuid())
+  name          String
+  email         String?  @unique
+  phone         String?
+  address       String?
+  city          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  trips         Trip[]
+
+  @@index([name])
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+  vehicleId   String
+  driver      Driver   @relation(fields: [driverId], references: [id])
+  driverId    String
+  customer    Customer? @relation(fields: [customerId], references: [id])
+  customerId  String?
+  route       String?
+  distance    String?
+  startDate   DateTime
+  endDate     DateTime?
+  status      String   @default("Planned")
+  revenue     Float    @default(0)
+  expense     Float    @default(0)
+  profit      Float    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expenses    Expense[]
+
+  @@index([status])
+  @@index([vehicleId])
+  @@index([driverId])
+  @@index([customerId])
+}
+
+model Expense {
+  id        String   @id @default(cuid())
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+  vehicleId String
+  trip      Trip?    @relation(fields: [tripId], references: [id])
+  tripId    String?
+  category  String
+  amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([tripId])
+  @@index([category])
+}
+
+model Route {
+  id        String   @id @default(cuid())
+  name      String
+  startCity String
+  endCity   String
+  distance  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([startCity, endCity])
+}
+
+model Contract {
+  id          String   @id @default(cuid())
+  name        String
+  customerName String
+  startDate   DateTime
+  endDate     DateTime
+  rate        Float
+  status      String   @default("Active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Maintenance {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  date        DateTime
+  cost        Float
+  notes       String?
+  status      String   @default("Pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Fuel {
+  id          String   @id @default(cuid())
+  vehicleNo   String
+  quantity    Float
+  cost        Float
+  date        DateTime
+  mileage     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
