@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { CustomRequest } from '../utils/types';
+import { Request, Response } from 'express';
 import { successResponse, errorResponse, getPaginationParams } from '../utils/helpers';
 import prisma from '../config/database';
 
-export const createDriver = async (req: CustomRequest, res: Response) => {
+export const createDriver = async (req: Request, res: Response) => {
   try {
     const { name, phone, license, licenseExpiry, experience } = req.body;
 
@@ -38,7 +37,7 @@ export const createDriver = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getDrivers = async (req: CustomRequest, res: Response) => {
+export const getDrivers = async (req: Request, res: Response) => {
   try {
     const { page, limit, status } = req.query;
     const paginationParams = getPaginationParams(String(page || 1), String(limit || 10));
@@ -77,7 +76,7 @@ export const getDrivers = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getDriverById = async (req: CustomRequest, res: Response) => {
+export const getDriverById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -102,7 +101,7 @@ export const getDriverById = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const updateDriver = async (req: CustomRequest, res: Response) => {
+export const updateDriver = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, phone, license, licenseExpiry, experience, status, rating } = req.body;
@@ -154,7 +153,7 @@ export const updateDriver = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const deleteDriver = async (req: CustomRequest, res: Response) => {
+export const deleteDriver = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 

@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { CustomRequest } from '../utils/types';
+import { Request, Response } from 'express';
 import { successResponse, errorResponse, getPaginationParams } from '../utils/helpers';
 import prisma from '../config/database';
 
-export const createVehicle = async (req: CustomRequest, res: Response) => {
+export const createVehicle = async (req: Request, res: Response) => {
   try {
     console.log('📥 [CREATE VEHICLE] Incoming request body:', JSON.stringify(req.body, null, 2));
 
@@ -54,7 +53,7 @@ export const createVehicle = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getVehicles = async (req: CustomRequest, res: Response) => {
+export const getVehicles = async (req: Request, res: Response) => {
   try {
     const { page, limit, status } = req.query;
     const paginationParams = getPaginationParams(String(page || 1), String(limit || 10));
@@ -93,7 +92,7 @@ export const getVehicles = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getVehicleById = async (req: CustomRequest, res: Response) => {
+export const getVehicleById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -122,7 +121,7 @@ export const getVehicleById = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const updateVehicle = async (req: CustomRequest, res: Response) => {
+export const updateVehicle = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { vehicleNo, name, type, model, capacity, fuelType, status, licenseExpiry, insuranceExpiry } =
@@ -168,7 +167,7 @@ export const updateVehicle = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const deleteVehicle = async (req: CustomRequest, res: Response) => {
+export const deleteVehicle = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 

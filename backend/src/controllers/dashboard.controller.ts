@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { CustomRequest } from '../utils/types';
+import { Request, Response } from 'express';
 import { successResponse, errorResponse } from '../utils/helpers';
 import prisma from '../config/database';
 
-export const getDashboardStats = async (req: CustomRequest, res: Response) => {
+export const getDashboardStats = async (req: Request, res: Response) => {
   try {
     const [vehicles, drivers, trips, expenses, customers] = await Promise.all([
       prisma.vehicle.findMany(),
@@ -72,7 +71,7 @@ export const getDashboardStats = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getRevenueByMonth = async (req: CustomRequest, res: Response) => {
+export const getRevenueByMonth = async (req: Request, res: Response) => {
   try {
     const trips = await prisma.trip.findMany({
       where: {
@@ -105,7 +104,7 @@ export const getRevenueByMonth = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getExpenseByCategory = async (req: CustomRequest, res: Response) => {
+export const getExpenseByCategory = async (req: Request, res: Response) => {
   try {
     const expenses = await prisma.expense.findMany();
 
@@ -130,7 +129,7 @@ export const getExpenseByCategory = async (req: CustomRequest, res: Response) =>
   }
 };
 
-export const getTopVehicles = async (req: CustomRequest, res: Response) => {
+export const getTopVehicles = async (req: Request, res: Response) => {
   try {
     const vehicles = await prisma.vehicle.findMany({
       orderBy: { totalRevenue: 'desc' },
@@ -144,7 +143,7 @@ export const getTopVehicles = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getTopDrivers = async (req: CustomRequest, res: Response) => {
+export const getTopDrivers = async (req: Request, res: Response) => {
   try {
     const drivers = await prisma.driver.findMany({
       orderBy: { rating: 'desc' },

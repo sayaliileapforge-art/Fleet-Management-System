@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { CustomRequest } from '../utils/types';
+import { Request, Response } from 'express';
 import { successResponse, errorResponse, getPaginationParams } from '../utils/helpers';
 import prisma from '../config/database';
 
-export const createCustomer = async (req: CustomRequest, res: Response) => {
+export const createCustomer = async (req: Request, res: Response) => {
   try {
     const { name, email, phone, address, city } = req.body;
 
@@ -37,7 +36,7 @@ export const createCustomer = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getCustomers = async (req: CustomRequest, res: Response) => {
+export const getCustomers = async (req: Request, res: Response) => {
   try {
     const { page, limit } = req.query;
     const paginationParams = getPaginationParams(String(page || 1), String(limit || 10));
@@ -70,7 +69,7 @@ export const getCustomers = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getCustomerById = async (req: CustomRequest, res: Response) => {
+export const getCustomerById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -95,7 +94,7 @@ export const getCustomerById = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const updateCustomer = async (req: CustomRequest, res: Response) => {
+export const updateCustomer = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, email, phone, address, city } = req.body;
@@ -136,7 +135,7 @@ export const updateCustomer = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const deleteCustomer = async (req: CustomRequest, res: Response) => {
+export const deleteCustomer = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 

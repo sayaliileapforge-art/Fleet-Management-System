@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { CustomRequest } from '../utils/types';
+import { Request, Response } from 'express';
 import { successResponse, errorResponse, getPaginationParams } from '../utils/helpers';
 import prisma from '../config/database';
 
-export const createExpense = async (req: CustomRequest, res: Response) => {
+export const createExpense = async (req: Request, res: Response) => {
   try {
     const { vehicleId, tripId, category, amount } = req.body;
 
@@ -49,7 +48,7 @@ export const createExpense = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getExpenses = async (req: CustomRequest, res: Response) => {
+export const getExpenses = async (req: Request, res: Response) => {
   try {
     const { page, limit, category, vehicleId, tripId } = req.query;
     const paginationParams = getPaginationParams(String(page || 1), String(limit || 10));
@@ -98,7 +97,7 @@ export const getExpenses = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const getExpenseById = async (req: CustomRequest, res: Response) => {
+export const getExpenseById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -121,7 +120,7 @@ export const getExpenseById = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const updateExpense = async (req: CustomRequest, res: Response) => {
+export const updateExpense = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { vehicleId, tripId, category, amount } = req.body;
@@ -165,7 +164,7 @@ export const updateExpense = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const deleteExpense = async (req: CustomRequest, res: Response) => {
+export const deleteExpense = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
