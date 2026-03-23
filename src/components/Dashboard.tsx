@@ -3,7 +3,9 @@ import { KPICard } from './shared/KPICard';
 import { Truck, MapPin, DollarSign, Receipt, Package, FileText, AlertCircle, TrendingUp, TrendingDown } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import type { Page } from '../App';
-import { vehicleService, tripService, expenseService } from '../services/supabase';
+import { vehicleService } from '../services/vehicle.service';
+import { tripService } from '../services/trip.service';
+import { expenseService } from '../services/expense.service';
 
 interface DashboardProps {
   onNavigate: (page: Page, id?: string) => void;
@@ -24,7 +26,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const [expenseCategoryData, setExpenseCategoryData] = useState<any[]>([]);
   const [maintenanceAlerts, setMaintenanceAlerts] = useState<MaintenanceAlert[]>([]);
 
-  // Load data from Supabase on mount
+  // Load data from backend API on mount
   useEffect(() => {
     loadDashboardData();
   }, []);
@@ -33,11 +35,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     try {
       setLoading(true);
       
-      const [vehiclesData, tripsData, expensesData] = await Promise.all([
-        vehicleService.getAll(),
-        tripService.getAll(),
-        expenseService.getAll()
+      const [vehiclesRes, tripsRes, expensesRes] = await Promise.all([
+        vehicleService.getAllVehicles(1, 100),
+        tripService.getAllTrips(1, 100),
+        expenseService.getAllExpenses(1, 100)
       ]);
+
+      const vehiclesData = vehiclesRes?.data?.vehicles || [];
+      const tripsData = tripsRes?.data?.trips || [];
+      const expensesData = expensesRes?.data?.expenses || [];
       
       setVehicles(vehiclesData || []);
       setTrips(tripsData || []);
