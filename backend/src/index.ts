@@ -1,11 +1,10 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import path from 'path';
 import { existsSync } from 'fs';
-import { fileURLToPath } from 'url';
 
 import vehicleRoutes from './routes/vehicle.routes';
 import driverRoutes from './routes/driver.routes';
@@ -20,8 +19,6 @@ dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 5001;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const frontendBuildPath = path.resolve(__dirname, '../../build');
 
 // Middleware
