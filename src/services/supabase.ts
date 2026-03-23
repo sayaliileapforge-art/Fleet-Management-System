@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import { createClient } from '@supabase/supabase-js';
+import api from './api';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://xsbrmsibiyzvmeilpber.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzYnJtc2liaXl6dm1laWxwYmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0ODI5MTEsImV4cCI6MjA4NTA1ODkxMX0.SfC4CulW3mq4-l9FzG78qQjSKMY4vg68sBVT8MV4Ux0';
@@ -9,220 +10,128 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Vehicle operations using Supabase
 export const vehicleService = {
   async create(vehicle: any) {
-    const { data, error } = await supabase
-      .from('Vehicle')
-      .insert([vehicle])
-      .select();
-    
-    if (error) {
-      console.error('❌ Error creating vehicle:', error);
-      throw error;
-    }
-    
-    return data;
+    const response = await api.post('/vehicles', vehicle);
+    return response?.data;
   },
 
   async getAll(filters?: any) {
-    let query = supabase.from('Vehicle').select('*');
-    
-    if (filters?.status) {
-      query = query.eq('status', filters.status);
-    }
-    
-    const { data, error } = await query.order('createdAt', { ascending: false });
-    
-    if (error) {
-      console.error('❌ Error fetching vehicles:', error);
-      throw error;
-    }
-    
-    return data || [];
+    const response = await api.get('/vehicles', {
+      params: {
+        page: 1,
+        limit: 100,
+        ...(filters?.status && { status: filters.status }),
+      },
+    });
+    return response?.data?.vehicles || [];
   },
 
   async getById(id: string) {
-    const { data, error } = await supabase
-      .from('Vehicle')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if (error) throw error;
-    return data;
+    const response = await api.get(`/vehicles/${id}`);
+    return response?.data;
   },
 
   async update(id: string, updates: any) {
-    const { data, error } = await supabase
-      .from('Vehicle')
-      .update(updates)
-      .eq('id', id)
-      .select();
-    
-    if (error) {
-      console.error('Update error:', error);
-      throw error;
-    }
-    return data;
+    const response = await api.put(`/vehicles/${id}`, updates);
+    return response?.data;
   },
 
   async delete(id: string) {
-    const { error } = await supabase
-      .from('Vehicle')
-      .delete()
-      .eq('id', id);
-    
-    if (error) throw error;
+    await api.delete(`/vehicles/${id}`);
   }
 };
 
 // Driver operations
 export const driverService = {
   async create(driver: any) {
-    const { data, error } = await supabase
-      .from('Driver')
-      .insert([driver])
-      .select();
-    if (error) throw error;
-    return data;
+    const response = await api.post('/drivers', driver);
+    return response?.data;
   },
 
   async getAll() {
-    const { data, error } = await supabase
-      .from('Driver')
-      .select('*')
-      .order('createdAt', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    const response = await api.get('/drivers', {
+      params: { page: 1, limit: 100 },
+    });
+    return response?.data?.drivers || [];
   },
 
   async update(id: string, updates: any) {
-    const { data, error } = await supabase
-      .from('Driver')
-      .update(updates)
-      .eq('id', id)
-      .select();
-    
-    if (error) {
-      console.error('Update error:', error);
-      throw error;
-    }
-    return data;
+    const response = await api.put(`/drivers/${id}`, updates);
+    return response?.data;
   },
 
   async delete(id: string) {
-    const { error } = await supabase
-      .from('Driver')
-      .delete()
-      .eq('id', id);
-    if (error) throw error;
+    await api.delete(`/drivers/${id}`);
   }
 };
 
 // Customer operations
 export const customerService = {
   async create(customer: any) {
-    // Remove any fields that might not exist in the database
     const customerData = {
       name: customer.name,
-      type: customer.type,
-      contactPerson: customer.contactPerson,
       phone: customer.phone,
       email: customer.email,
       address: customer.address,
-      gstNumber: customer.gstNumber || null,
-      panNumber: customer.panNumber || null
+      city: customer.city,
     };
-    
-    const { data, error } = await supabase
-      .from('Customer')
-      .insert([customerData])
-      .select();
-    
-    if (error) {
-      console.error('❌ Customer create error:', error);
-      // Provide more helpful error message for conflicts
-      if (error.code === '23505') {
-        throw new Error('A customer with this email, phone, GST, or PAN already exists.');
-      }
-      throw error;
-    }
-    return data;
+
+    const response = await api.post('/customers', customerData);
+    return response?.data;
   },
 
   async getAll() {
-    const { data, error } = await supabase
-      .from('Customer')
-      .select('*')
-      .order('createdAt', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    const response = await api.get('/customers', {
+      params: { page: 1, limit: 100 },
+    });
+    return response?.data?.customers || [];
   },
 
   async delete(id: string) {
-    const { error } = await supabase
-      .from('Customer')
-      .delete()
-      .eq('id', id);
-    if (error) throw error;
+    await api.delete(`/customers/${id}`);
   }
 };
 
 // Trip operations
 export const tripService = {
   async create(trip: any) {
-    const { data, error } = await supabase
-      .from('Trip')
-      .insert([trip])
-      .select();
-    if (error) throw error;
-    return data;
+    const { routeId, ...tripPayload } = trip;
+    const response = await api.post('/trips', tripPayload);
+    return response?.data;
   },
 
   async getAll(filters?: any) {
-    let query = supabase.from('Trip').select('*');
-    
-    if (filters?.status) {
-      query = query.eq('status', filters.status);
-    }
-    
-    const { data, error } = await query.order('createdAt', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    const response = await api.get('/trips', {
+      params: {
+        page: 1,
+        limit: 100,
+        ...(filters?.status && { status: filters.status }),
+      },
+    });
+    return response?.data?.trips || [];
   },
 
   async delete(id: string) {
-    const { error } = await supabase
-      .from('Trip')
-      .delete()
-      .eq('id', id);
-    if (error) throw error;
+    await api.delete(`/trips/${id}`);
   }
 };
 
 // Expense operations
 export const expenseService = {
   async create(expense: any) {
-    const { data, error } = await supabase
-      .from('Expense')
-      .insert([{
-        vehicleId: expense.vehicleId,
-        tripId: expense.tripId || null,
-        customerId: expense.customerId || null,
-        category: expense.category,
-        amount: expense.amount,
-        paymentMethod: expense.paymentMethod || 'Cash'
-      }])
-      .select();
-    if (error) throw error;
-    return data;
+    const response = await api.post('/expenses', {
+      vehicleId: expense.vehicleId,
+      tripId: expense.tripId || null,
+      category: expense.category,
+      amount: expense.amount,
+    });
+    return response?.data;
   },
 
   async getAll() {
-    const { data, error } = await supabase
-      .from('Expense')
-      .select('*')
-      .order('createdAt', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    const response = await api.get('/expenses', {
+      params: { page: 1, limit: 100 },
+    });
+    return response?.data?.expenses || [];
   }
 };
 
