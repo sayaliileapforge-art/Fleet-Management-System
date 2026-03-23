@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, X, Edit, Trash2 } from 'lucide-react';
-import { supabase, routeService } from '../../services/supabase';
+import { routeService, tripService } from '../../services/supabase';
 
 interface Route {
   id: string;
@@ -38,27 +38,14 @@ export function RoutesList() {
   const loadData = async () => {
     try {
       setLoading(true);
-      
-      // Load routes
-      const { data: routesData, error: routesError } = await supabase
-        .from('Route')
-        .select('*')
-        .order('createdAt', { ascending: false });
-      
-      if (routesError) throw routesError;
+
+      const [routesData, tripsData] = await Promise.all([
+        routeService.getAll(),
+        tripService.getAll(),
+      ]);
+
       setRoutes(routesData || []);
-      
-      // Load active trips to calculate active dispatches (Running status)
-      const { data: tripsData, error: tripsError } = await supabase
-        .from('Trip')
-        .select('status')
-        .eq('status', 'Running');
-      
-      if (!tripsError && tripsData) {
-        setActiveDispatchCount(tripsData.length);
-      } else {
-        setActiveDispatchCount(0);
-      }
+      setActiveDispatchCount((tripsData || []).filter((trip: any) => trip.status === 'Running').length);
     } catch (error) {
       console.error('Error loading routes:', error);
     } finally {

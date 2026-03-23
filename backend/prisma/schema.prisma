@@ -109,8 +109,8 @@ model Expense {
 model Route {
   id        String   @id @default(cuid())
   name      String
-  startCity String
-  endCity   String
+  startCity String   @map("from")
+  endCity   String   @map("to")
   distance  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

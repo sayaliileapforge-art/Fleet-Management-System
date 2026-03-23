@@ -177,62 +177,48 @@ export const loadService = {
 // Route operations
 export const routeService = {
   async create(route: any) {
-    const { data, error } = await supabase
-      .from('Route')
-      .insert([route])
-      .select();
-    if (error) throw error;
-    return data;
+    const payload = {
+      name: route.name,
+      from: route.from,
+      to: route.to,
+      distance: route.distance,
+    };
+    const response = await api.post('/routes', payload);
+    return response?.data;
   },
 
   async getAll() {
-    const { data, error } = await supabase
-      .from('Route')
-      .select('*')
-      .order('createdAt', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    const response = await api.get('/routes', {
+      params: { page: 1, limit: 100 },
+    });
+    return (response?.data?.routes || []).map((route: any) => ({
+      ...route,
+      from: route.startCity,
+      to: route.endCity,
+      avgTime: route.avgTime || '-',
+      totalTrips: route.totalTrips || 0,
+      frequency: route.frequency || 'Medium',
+    }));
   },
 
   async update(id: string, updates: any) {
-    const { data, error } = await supabase
-      .from('Route')
-      .update(updates)
-      .eq('id', id)
-      .select();
-    
-    if (error) {
-      console.error('Update error:', error);
-      throw error;
-    }
-    return data;
+    const payload = {
+      ...(updates.name !== undefined && { name: updates.name }),
+      ...(updates.from !== undefined && { from: updates.from }),
+      ...(updates.to !== undefined && { to: updates.to }),
+      ...(updates.distance !== undefined && { distance: updates.distance }),
+    };
+    const response = await api.put(`/routes/${id}`, payload);
+    return response?.data;
   },
 
   async delete(id: string) {
-    const { error } = await supabase
-      .from('Route')
-      .delete()
-      .eq('id', id);
-    if (error) throw error;
+    await api.delete(`/routes/${id}`);
   },
 
   async incrementTripCount(id: string) {
-    // Fetch current route
-    const { data: route, error: fetchError } = await supabase
-      .from('Route')
-      .select('totalTrips')
-      .eq('id', id)
-      .single();
-    
-    if (fetchError) throw fetchError;
-    
-    // Increment trip count
-    const { error: updateError } = await supabase
-      .from('Route')
-      .update({ totalTrips: (route?.totalTrips || 0) + 1 })
-      .eq('id', id);
-    
-    if (updateError) throw updateError;
+    // No-op for now: backend Route model doesn't persist total trip counters.
+    return id;
   }
 };
 

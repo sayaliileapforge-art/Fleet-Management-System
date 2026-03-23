@@ -12,6 +12,7 @@ import customerRoutes from './routes/customer.routes';
 import tripRoutes from './routes/trip.routes';
 import expenseRoutes from './routes/expense.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import routeRoutes from './routes/route.routes';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
 
@@ -47,6 +48,7 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/routes', routeRoutes);
 
 // Serve frontend build for single-service deployments (e.g., Render Web Service).
 if (existsSync(frontendBuildPath)) {

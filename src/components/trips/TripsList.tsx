@@ -61,14 +61,20 @@ export function TripsList({ onViewDetail }: TripsListProps) {
   const loadData = async () => {
     try {
       setLoading(true);
-      
-      const [tripsData, vehiclesData, driversData, customersData, routesData] = await Promise.all([
+
+      const [tripsResult, vehiclesResult, driversResult, customersResult, routesResult] = await Promise.allSettled([
         tripService.getAll(),
         vehicleService.getAll(),
         driverService.getAll(),
         customerService.getAll(),
-        routeService.getAll()
+        routeService.getAll(),
       ]);
+
+      const tripsData = tripsResult.status === 'fulfilled' ? tripsResult.value : [];
+      const vehiclesData = vehiclesResult.status === 'fulfilled' ? vehiclesResult.value : [];
+      const driversData = driversResult.status === 'fulfilled' ? driversResult.value : [];
+      const customersData = customersResult.status === 'fulfilled' ? customersResult.value : [];
+      const routesData = routesResult.status === 'fulfilled' ? routesResult.value : [];
       
       // Transform trips data to match UI interface
       const transformedTrips = (tripsData || []).map((trip: any, index: number) => {
