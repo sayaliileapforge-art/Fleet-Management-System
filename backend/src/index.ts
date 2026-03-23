@@ -3,6 +3,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import path from 'path';
+import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
 
 import vehicleRoutes from './routes/vehicle.routes';
 import driverRoutes from './routes/driver.routes';
@@ -17,6 +20,9 @@ dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 5001;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendBuildPath = path.resolve(__dirname, '../../build');
 
 // Middleware
 app.use(helmet());
@@ -44,6 +50,14 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+
+// Serve frontend build for single-service deployments (e.g., Render Web Service).
+if (existsSync(frontendBuildPath)) {
+  app.use(express.static(frontendBuildPath));
+  app.get(/^\/(?!api).*/, (req: Request, res: Response) => {
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+  });
+}
 
 // 404 Handler
 app.use(notFoundHandler);
