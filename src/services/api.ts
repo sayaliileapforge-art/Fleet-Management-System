@@ -31,7 +31,15 @@ api.interceptors.response.use(
       // Handle unauthorized access
       console.error('Unauthorized access');
     }
-    return Promise.reject(error.response?.data || error);
+
+    const responseData = error.response?.data;
+    const message =
+      responseData?.message ||
+      responseData?.error?.message ||
+      error.message ||
+      'Request failed';
+
+    return Promise.reject(new Error(message));
   }
 );
 

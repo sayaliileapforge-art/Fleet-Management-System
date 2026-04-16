@@ -1,0 +1,263 @@
+[
+  {
+    "srNo": 1,
+    "model": "Tata 1613",
+    "vehicleNumber": "MH-04GF-9036",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 2,
+    "model": "Tata 3118",
+    "vehicleNumber": "MH-04FP-6282",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 3,
+    "model": "Tata 2518",
+    "vehicleNumber": "MH-05AM-5888",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 4,
+    "model": "Tata 709",
+    "vehicleNumber": "MH-05DK-6579",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 5,
+    "model": "Voltas Foreclip",
+    "vehicleNumber": "MH-05DS-3195",
+    "vehicleType": "Machine",
+    "fuelType": "Diesel",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 6,
+    "model": "Voltas Foreclip",
+    "vehicleNumber": "MH-05EA-1836",
+    "vehicleType": "Machine",
+    "fuelType": "Diesel",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 7,
+    "model": "Voltas Foreclip",
+    "vehicleNumber": "MH-05EA-1845",
+    "vehicleType": "Machine",
+    "fuelType": "Diesel",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 8,
+    "model": "Voltas Foreclip",
+    "vehicleNumber": "MH-05EQ-6759",
+    "vehicleType": "Machine",
+    "fuelType": "Diesel",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 9,
+    "model": "AL 1015",
+    "vehicleNumber": "MH-05EL-1899",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 10,
+    "model": "AL 3118",
+    "vehicleNumber": "MH-04FU-6282",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 11,
+    "model": "Klon India Forklift",
+    "vehicleNumber": "ELECTRIC-KION-FORKLIFT",
+    "vehicleType": "Machine",
+    "fuelType": "Electric",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 12,
+    "model": "AL 1618",
+    "vehicleNumber": "MH-05DK-9036",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 13,
+    "model": "AL 3118",
+    "vehicleNumber": "MH-05DK-6282",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 14,
+    "model": "AL 1618",
+    "vehicleNumber": "MH-43BG-4390",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 15,
+    "model": "AL 1618",
+    "vehicleNumber": "MH-43BG-4335",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 16,
+    "model": "AL 3118",
+    "vehicleNumber": "MH-46AR-3299",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 17,
+    "model": "AL 1615",
+    "vehicleNumber": "MH-05EL-9036",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 18,
+    "model": "AL 1615",
+    "vehicleNumber": "MH-05EL-6282",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 19,
+    "model": "Toyota Forklift",
+    "vehicleNumber": "MH-05EV-9036",
+    "vehicleType": "Machine",
+    "fuelType": "Diesel",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 20,
+    "model": "AL 3335",
+    "vehicleNumber": "MH-05EL-6399",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 21,
+    "model": "Toyota Forklift",
+    "vehicleNumber": "ELECTRIC-TOYOTA-01",
+    "vehicleType": "Machine",
+    "fuelType": "Electric",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 22,
+    "model": "Toyota Forklift",
+    "vehicleNumber": "ELECTRIC-TOYOTA-02",
+    "vehicleType": "Machine",
+    "fuelType": "Electric",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 23,
+    "model": "Toyota Forklift",
+    "vehicleNumber": "ELECTRIC-TOYOTA-03",
+    "vehicleType": "Machine",
+    "fuelType": "Electric",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 24,
+    "model": "Toyota Forklift",
+    "vehicleNumber": "BATTERY-FORKLIFT",
+    "vehicleType": "Machine",
+    "fuelType": "Electric",
+    "capacity": "N/A",
+    "status": "Active"
+  },
+  {
+    "srNo": 25,
+    "model": "Ashok Leyland",
+    "vehicleNumber": "MH-05FJ-7299",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 26,
+    "model": "Ashok Leyland",
+    "vehicleNumber": "MH-05FJ-9036",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 27,
+    "model": "Eicher Pro 2059",
+    "vehicleNumber": "MH-05FJ-6282",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 28,
+    "model": "Eicher Pro 2059",
+    "vehicleNumber": "GJ-16AW-8086",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  },
+  {
+    "srNo": 29,
+    "model": "Ashok Leyland",
+    "vehicleNumber": "MH-05FJ-7929",
+    "vehicleType": "Heavy Truck",
+    "fuelType": "Diesel",
+    "capacity": "40 tons",
+    "status": "Active"
+  }
+]

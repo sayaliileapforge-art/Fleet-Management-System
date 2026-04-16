@@ -1,154 +1,257 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Vehicle {
-  id            String   @id @default(cuid())
-  vehicleNo     String   @unique
-  name          String
-  type          String
-  model         String
-  capacity      String
-  fuelType      String
-  status        String   @default("Active")
-  licenseExpiry DateTime?
-  insuranceExpiry DateTime?
-  totalTrips    Int      @default(0)
-  totalRevenue  Float    @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  trips         Trip[]
-  expenses      Expense[]
+  id              String      @id @default(dbgenerated("(gen_random_uuid())::text"))
+  vehicleNo       String      @unique
+  name            String
+  type            String
+  model           String
+  capacity        String?
+  fuelType        String?
+  status          String?     @default("Active")
+  licenseExpiry   DateTime?   @db.Timestamptz(6)
+  insuranceExpiry DateTime?   @db.Timestamptz(6)
+  totalTrips      Int?        @default(0)
+  totalRevenue    Float?      @default(0)
+  createdAt       DateTime?   @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime?   @default(now()) @updatedAt @db.Timestamptz(6)
+  expenses        Expense[]
+  FuelEntry       FuelEntry[]
+  trips           Trip[]
 
-  @@index([status])
-  @@index([vehicleNo])
+  @@index([status], map: "idx_vehicle_status")
+  @@index([vehicleNo], map: "idx_vehicle_vehicleno")
 }
 
 model Driver {
-  id            String   @id @default(cuid())
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
   name          String
-  phone         String   @unique
-  license       String   @unique
-  licenseExpiry DateTime?
-  experience    String
-  status        String   @default("Active")
-  totalTrips    Int      @default(0)
-  rating        Float    @default(4.5)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  phone         String?   @unique
+  license       String?   @unique
+  licenseExpiry DateTime? @db.Timestamptz(6)
+  experience    String?
+  status        String?   @default("Active")
+  totalTrips    Int?      @default(0)
+  rating        Float?    @default(4.5)
+  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
   trips         Trip[]
 
-  @@index([status])
-  @@index([name])
+  @@index([name], map: "idx_driver_name")
+  @@index([status], map: "idx_driver_status")
 }
 
 model Customer {
-  id            String   @id @default(cuid())
-  name          String
-  email         String?  @unique
-  phone         String?
-  address       String?
-  city          String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  trips         Trip[]
+  id                              String     @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name                            String
+  email                           String?    @unique
+  phone                           String?
+  address                         String?
+  city                            String?
+  createdAt                       DateTime?  @default(now()) @db.Timestamptz(6)
+  updatedAt                       DateTime?  @default(now()) @updatedAt @db.Timestamptz(6)
+  type                            String?    @default("Customer")
+  contactPerson                   String?
+  gstNumber                       String?
+  panNumber                       String?
+  notes                           String?
+  totalRevenue                    Float?     @default(0)
+  outstanding                     Float?     @default(0)
+  Contract                        Contract[]
+  Expense                         Expense[]
+  Invoice                         Invoice[]
+  Load_Load_consigneeIdToCustomer Load[]     @relation("Load_consigneeIdToCustomer")
+  Load_Load_consignorIdToCustomer Load[]     @relation("Load_consignorIdToCustomer")
+  trips                           Trip[]
 
-  @@index([name])
+  @@index([name], map: "idx_customer_name")
+  @@index([type], map: "idx_customer_type")
 }
 
 model Trip {
-  id          String   @id @default(cuid())
-  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
-  vehicleId   String
-  driver      Driver   @relation(fields: [driverId], references: [id])
-  driverId    String
-  customer    Customer? @relation(fields: [customerId], references: [id])
-  customerId  String?
-  route       String?
-  distance    String?
-  startDate   DateTime
-  endDate     DateTime?
-  status      String   @default("Planned")
-  revenue     Float    @default(0)
-  expense     Float    @default(0)
-  profit      Float    @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  expenses    Expense[]
+  id         String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  vehicleId  String
+  driverId   String
+  customerId String?
+  route      String?
+  distance   String?
+  startDate  DateTime  @db.Timestamptz(6)
+  endDate    DateTime? @db.Timestamptz(6)
+  status     String?   @default("Planned")
+  revenue    Float?    @default(0)
+  expense    Float?    @default(0)
+  profit     Float?    @default(0)
+  createdAt  DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  routeId    String?
+  expenses   Expense[]
+  Invoice    Invoice[]
+  Load       Load[]
+  customer   Customer? @relation(fields: [customerId], references: [id], onUpdate: NoAction)
+  driver     Driver    @relation(fields: [driverId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Route      Route?    @relation(fields: [routeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  vehicle    Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([status])
-  @@index([vehicleId])
-  @@index([driverId])
-  @@index([customerId])
+  @@index([customerId], map: "idx_trip_customerid")
+  @@index([driverId], map: "idx_trip_driverid")
+  @@index([routeId], map: "idx_trip_routeid")
+  @@index([status], map: "idx_trip_status")
+  @@index([vehicleId], map: "idx_trip_vehicleid")
 }
 
 model Expense {
-  id        String   @id @default(cuid())
-  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
-  vehicleId String
-  trip      Trip?    @relation(fields: [tripId], references: [id])
-  tripId    String?
-  category  String
-  amount    Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  vehicleId     String
+  tripId        String?
+  category      String
+  amount        Float
+  description   String?
+  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  customerId    String?
+  paymentMethod String?   @default("Cash")
+  Customer      Customer? @relation(fields: [customerId], references: [id], onUpdate: NoAction)
+  trip          Trip?     @relation(fields: [tripId], references: [id], onUpdate: NoAction)
+  vehicle       Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([vehicleId])
-  @@index([tripId])
-  @@index([category])
+  @@index([category], map: "idx_expense_category")
+  @@index([tripId], map: "idx_expense_tripid")
+  @@index([vehicleId], map: "idx_expense_vehicleid")
 }
 
 model Route {
-  id        String   @id @default(cuid())
-  name      String
-  startCity String   @map("from")
-  endCity   String   @map("to")
-  distance  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([startCity, endCity])
+  id         String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name       String
+  startCity  String    @map("from")
+  endCity    String    @map("to")
+  distance   String?
+  avgTime    String?
+  totalTrips Int?      @default(0)
+  frequency  String?   @default("Medium")
+  createdAt  DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  Trip       Trip[]
 }
 
 model Contract {
-  id          String   @id @default(cuid())
-  name        String
-  customerName String
-  startDate   DateTime
-  endDate     DateTime
-  rate        Float
-  status      String   @default("Active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name         String
+  customerId   String?
+  startDate    DateTime  @db.Timestamptz(6)
+  endDate      DateTime? @db.Timestamptz(6)
+  budget       Float?    @default(0)
+  spent        Float?    @default(0)
+  description  String?
+  paymentTerms String?
+  status       String?   @default("Active")
+  trips        Int?      @default(0)
+  createdAt    DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  Customer     Customer? @relation(fields: [customerId], references: [id], onUpdate: NoAction)
+
+  @@index([customerId], map: "idx_contract_customerid")
+  @@index([status], map: "idx_contract_status")
 }
 
-model Maintenance {
-  id          String   @id @default(cuid())
-  name        String
-  type        String
-  date        DateTime
-  cost        Float
-  notes       String?
-  status      String   @default("Pending")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model CompetitorPricing {
+  id              String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  companyName     String
+  vehicleType     String
+  capacity        String
+  route           String
+  price           Float
+  ourPrice        Float
+  priceDifference Float?    @default(0)
+  isBestPrice     Boolean?  @default(false)
+  marketRank      Int?      @default(5)
+  date            String
+  createdAt       DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([companyName], map: "idx_competitorpricing_companyname")
+  @@index([date], map: "idx_competitorpricing_date")
 }
 
-model Fuel {
-  id          String   @id @default(cuid())
-  vehicleNo   String
-  quantity    Float
-  cost        Float
-  date        DateTime
-  mileage     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Document {
+  id         String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name       String
+  category   String
+  linkedType String?
+  linkedTo   String?
+  uploadDate String?
+  expiry     String?
+  status     String?   @default("Valid")
+  createdAt  DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime? @default(now()) @db.Timestamptz(6)
+  fileUrl    String?
+  fileName   String?
+  fileType   String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model FuelEntry {
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  date          String
+  vehicleId     String?
+  vehicle       String?
+  liters        Float
+  pricePerLiter Float
+  totalCost     Float
+  odometer      Float?
+  efficiency    Float?    @default(0)
+  vendor        String?
+  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime? @default(now()) @db.Timestamptz(6)
+  Vehicle       Vehicle?  @relation(fields: [vehicleId], references: [id], onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Invoice {
+  id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  customerId   String?
+  customerName String?
+  tripId       String?
+  tripRoute    String?
+  invoiceDate  String
+  dueDate      String
+  amount       Float     @default(0)
+  paidAmount   Float?    @default(0)
+  status       String?   @default("Unpaid")
+  notes        String?
+  createdAt    DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime? @default(now()) @db.Timestamptz(6)
+  Customer     Customer? @relation(fields: [customerId], references: [id], onUpdate: NoAction)
+  Trip         Trip?     @relation(fields: [tripId], references: [id], onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Load {
+  id                                  String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  tripId                              String?
+  material                            String
+  weight                              String?
+  from                                String
+  to                                  String
+  status                              String?   @default("Pending")
+  pod                                 String?   @default("Pending")
+  createdAt                           DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt                           DateTime? @default(now()) @db.Timestamptz(6)
+  consignorId                         String?
+  consigneeId                         String?
+  Customer_Load_consigneeIdToCustomer Customer? @relation("Load_consigneeIdToCustomer", fields: [consigneeId], references: [id], onUpdate: NoAction)
+  Customer_Load_consignorIdToCustomer Customer? @relation("Load_consignorIdToCustomer", fields: [consignorId], references: [id], onUpdate: NoAction)
+  Trip                                Trip?     @relation(fields: [tripId], references: [id], onUpdate: NoAction)
+
+  @@index([consigneeId], map: "idx_load_consigneeid")
+  @@index([consignorId], map: "idx_load_consignorid")
 }
